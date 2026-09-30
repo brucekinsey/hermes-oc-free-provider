@@ -273,10 +273,18 @@ def _free_live_models(zen: Any, catalog: Any) -> list[str]:
             )
         ):
             free.append(str(model))
+
+    # Include Zen-live models with -free suffix not already covered by the
+    # models.dev catalog (catalog entries can lag behind Zen releases).
+    for model_id in zen_models:
+        if model_id not in free and model_id.endswith("-free"):
+            free.append(model_id)
+
     return sorted(free)
 
 
 def _model_cache_path() -> Path:
+
     return get_hermes_home() / "cache" / "oc-free-provider" / "models.json"
 
 
